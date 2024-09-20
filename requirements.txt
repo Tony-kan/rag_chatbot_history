@@ -1,8 +1,8 @@
-langchain==0.2.6
-langchain-community==0.2.6
-langchain-chroma==0.1.2
-sentence-transformers==3.0.1
-torch==2.1.2
-fastapi==0.108.0
-uvicorn==0.25.0
-pydantic==2.5.3
+langchain
+langchain-community
+langchain-chroma
+sentence-transformers
+torch
+fastapi
+uvicorn
+pydantic
