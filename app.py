@@ -1,8 +1,15 @@
 import os
 from torch import cuda
-from langchain.embeddings.huggingface import HuggingFaceBgeEmbeddings
+# from langchain.embeddings.huggingface import HuggingFaceBgeEmbeddings
+# from langchain_community.embeddings import HuggingFaceBgeEmbeddings
+# from langchain_community.embeddings import OpenAIEmbeddings
+from langchain_community.embeddings import FastEmbedEmbeddings
 from langchain_community.llms import llamacpp
-from langchain.document_loaders import WebBaseLoader
+from langchain_openai import ChatOpenAI
+
+# from langchain.llms import llamacpp
+# from langchain.document_loaders import WebBaseLoader
+from langchain_community.document_loaders import WebBaseLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_chroma import Chroma
 from langchain.chains import create_history_aware_retriever
@@ -15,27 +22,35 @@ from langchain_core.runnables.history import RunnableWithMessageHistory
 from fastapi import FastAPI
 from pydantic import BaseModel
 
+import getpass
+import os
+
+os.environ["OPENAI_API_KEY"] = getpass.getpass()
 
 # load embedding model
-embed_model_id = "Alibaba-NLP/gte-large-en-v1.5"
-device='cuda'
-embed_model = HuggingFaceBgeEmbeddings(
-    model_name=embed_model_id,
-    model_kwargs={'device':device,'trust_remote_code':True},
-    encode_kwargs={'device':device}
-)
+# embed_model_id = "Alibaba-NLP/gte-large-en-v1.5"
+# device='cpu'
+# embed_model = HuggingFaceBgeEmbeddings(
+#     model_name=embed_model_id,
+#     model_kwargs={'device':device,'trust_remote_code':True},
+#     encode_kwargs={'device':device}
+# )
+embed_model = FastEmbedEmbeddings()
 
 # download llama2 7b
-os.system("wget https://huggingface.co/TheBloke/Llama-2-7B-Chat-GGUF/resolve/main/llama-2-7b-chat.Q8_0.gguf?download=true -O llama-2-7b-chat.Q8_0.gguf")
+# os.system("wget https://huggingface.co/TheBloke/Llama-2-7B-Chat-GGUF/resolve/main/llama-2-7b-chat.Q8_0.gguf?download=true -O llama-2-7b-chat.Q8_0.gguf")
 
 # initialize llm model using llama_cpp
-llm = llamacpp(
-    model_path="./llama-2-7b-chat.Q8_0.gguf",
-    n_gpu_layers=-1,
-    n_ctx=4000,
-    temperature=0.1,
-    verbose=False,
-)
+# llm = llamacpp(
+#     model_path="./llama-2-7b-chat.Q8_0.gguf",
+#     n_gpu_layers=-1,
+#     n_ctx=4000,
+#     temperature=0.1,
+#     verbose=False,
+# )
+llm = ChatOpenAI(model="gpt-3.5-turbo")
+
+
 
 # api initialize fastapi app and variables
 app = FastAPI()

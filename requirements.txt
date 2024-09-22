@@ -1,8 +1,8 @@
 langchain
 langchain-community
 langchain-chroma
-sentence-transformers
-torch
+langchain-openai
 fastapi
 uvicorn
 pydantic
+beautifulsoup4
